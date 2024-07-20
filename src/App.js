@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <h1>Simulación de Estacionamiento</h1>
       <SimForm onSubmit={handleSimulation} />
-      
+      {datos.length > 0 && <DataTable data={datos}  />}
     </div>
   )
 }
