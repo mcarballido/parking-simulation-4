@@ -4,7 +4,7 @@ import { Table, Container } from 'react-bootstrap';
 const DataTable = ({ data,variableEstadistica }) => {
     return (
         <div className="container">
-          <table className="table table-striped">
+          <Table className="table table-striped">
             <thead>
               <tr>
                 <th>Evento</th>
@@ -41,7 +41,7 @@ const DataTable = ({ data,variableEstadistica }) => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       );
     };

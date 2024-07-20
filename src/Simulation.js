@@ -104,7 +104,7 @@ class Simulation {
       colaEventos: [new EventoLlegadaAuto(0)],
     }
 
-    for (let i = 0; i < CANTIDAD_DE_FILAS_A_SIMULAR; i++) {
+    for (let fila = 0; fila < CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
       const eventoProximo = this.extraerEventoProximo(datos)
 
       if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
@@ -115,26 +115,52 @@ class Simulation {
 
       datos.tiempo = eventoProximo.tiempoDeOcurrencia
 
-      //this.mostrarDatos(eventoProximo, datos)
+      this.mostrarDatos(eventoProximo, datos)
           //pasaje de datos a tabla
+
+          
       const filaDatos = {
         tiempo: eventoProximo.tiempoDeOcurrencia,
         evento: eventoProximo.constructor.name,
-        autos: autos,
-        filaCaja: filaCaja,
-        utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
-        utilitariosLibres: utilitariosLibres,
-        utilitariosOcupados: utilitariosOcupados,
-        grandesLibres: grandesLibres,
-        grandesOcupados: grandesOcupados,
-        pequeñosLibres: pequeñosLibres,
-        pequeñosOcupados: pequeñosOcupados,
-        cantAutosPagaron: datos.cantAutosPagaron,
-        totalAcumulado: datos.acumuladorPlata,
-        eventosCola: colaEventos,
+        autos: datos.autosIngresados.map(auto => {
+            return { nro: auto.nro, estado: auto.estado }
+          }),
+        filaCaja: datos.filaCaja.map(auto => {
+            return { nro: auto.nro }
+          }),
+        utilitariosParcialmenteLibres: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
+          ).length,
+        utilitariosLibres: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
+          ).length,
+        utilitariosOcupados: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
+          ).length,
+        grandesLibres: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
+          ).length,
+        grandesOcupados: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
+          ).length,
+        pequeñosLibres: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
+          ).length,
+        pequeñosOcupados: datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
+          ).length,
+
+        eventosCola:   datos.colaEventos.map(evento => {
+            return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
+          }),
+          cantAutosPagaron: datos.cantAutosPagaron,
+          totalAcumulado: datos.acumuladorPlata,
 
         
     };
+
+   
+
     
     if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
         this.resultados.push({ ...filaDatos, nroFila: fila })

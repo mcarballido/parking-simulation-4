@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 export const CANTIDAD_DE_FILAS_A_SIMULAR = 'CANTIDAD_DE_FILAS_A_SIMULAR';
 
 
-const SimulacionFormulario = ({ onSubmit }) => {
+const SimForm = ({ onSubmit }) => {
   const [formValues, setFormValues] = useState({
     cantidadFilasASimular: 60,
     filaASimularDesde: 0,
@@ -59,4 +59,4 @@ const SimulacionFormulario = ({ onSubmit }) => {
   );
 };
 
-export default Form;
+export default SimForm;

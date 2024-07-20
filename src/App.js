@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DataTable from './components/DataTable.js'
-import Form from './components/Form'
+import SimForm from './components/SimForm.js'
 import Simulation from './Simulation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -32,7 +32,7 @@ function App() {
   return (
     <div className="App">
       <h1>Simulación de Estacionamiento</h1>
-      <Form onSubmit={handleSimulation} />
+      <SimForm onSubmit={handleSimulation} />
       
     </div>
   )
