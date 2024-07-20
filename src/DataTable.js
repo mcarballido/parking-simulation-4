@@ -2,46 +2,43 @@
 import React from 'react';
 
 const DataTable = ({ data }) => {
+  // Se asume que data contiene los campos necesarios
   return (
     <div className="container">
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Nombre del Evento</th>
-            <th>Tiempo Actual</th>
-            <th>Random Llegada</th>
-            <th>Próxima Llegada</th>
-            <th>Random Fin Estacionamiento</th>
-            <th>Tiempo Fin Estacionamiento</th>
-            <th>Random Tamaño</th>
-            <th>Tamaño Vehículo</th>
-            <th>Fin de Cobro</th>
-            <th>Estado de Caja</th>
-            <th>Cantidad de Autos en Cola para Caja</th>
-            <th>Cantidad de Lugares Disponibles</th>
-            <th>Cantidad de Autos que Pagaron</th>
+            <th>Evento</th>
+            <th>Tiempo</th>
+            <th>Autos Ingresados</th>
+            <th>Fila en Caja</th>
+            <th>Lugares Utilitarios Parcialmente Libres</th>
+            <th>Lugares Utilitarios Libres</th>
+            <th>Lugares Utilitarios Ocupados</th>
+            <th>Lugares Grandes Libres</th>
+            <th>Lugares Grandes Ocupados</th>
+            <th>Lugares Pequeños Libres</th>
+            <th>Lugares Pequeños Ocupados</th>
+            <th>Cantidad Autos que Pagaron</th>
             <th>Total Acumulado</th>
-            <th>Estado de Autos</th>
           </tr>
         </thead>
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
-              <td>{row.nombreEvento}</td>
-              <td>{row.tiempoActual}</td>
-              <td>{row.randomLlegada}</td>
-              <td>{row.proximaLlegada}</td>
-              <td>{row.randomFinEstacionamiento}</td>
-              <td>{row.tiempoFinEstacionamiento}</td>
-              <td>{row.randomTamano}</td>
-              <td>{row.tamanoVehiculo}</td>
-              <td>{row.finDeCobro}</td>
-              <td>{row.estadoDeCaja}</td>
-              <td>{row.cantidadAutosEnColaParaCaja}</td>
-              <td>{row.cantidadLugaresDisponibles}</td>
-              <td>{row.cantidadAutosQuePagaron}</td>
+              <td>{row.evento}</td>
+              <td>{row.tiempo}</td>
+              <td>{JSON.stringify(row.autos)}</td>
+              <td>{JSON.stringify(row.filaCaja)}</td>
+              <td>{row.utilitariosParcialmenteLibres}</td>
+              <td>{row.utilitariosLibres}</td>
+              <td>{row.utilitariosOcupados}</td>
+              <td>{row.grandesLibres}</td>
+              <td>{row.grandesOcupados}</td>
+              <td>{row.pequeñosLibres}</td>
+              <td>{row.pequeñosOcupados}</td>
+              <td>{row.cantAutosPagaron}</td>
               <td>{row.totalAcumulado}</td>
-              <td>{row.estadoDeAutos}</td>
             </tr>
           ))}
         </tbody>
