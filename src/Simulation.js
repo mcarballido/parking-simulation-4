@@ -380,5 +380,5 @@ class EventoFinCobro {
 }
 
 //como corrrer simulacion M con salida en consola
-//new TrabajoPractico().comenzarEjecucion()
+//new Simulation().comenzarEjecucion()
 export default Simulation
