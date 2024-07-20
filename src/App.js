@@ -14,8 +14,10 @@ function App() {
     sim.FILA_A_SIMULAR_DESDE = filaASimularDesde
     sim.CANTIDAD_FILAS_A_MOSTRAR = cantidadFilasAMostrar
     sim.comenzarEjecucion()
-    const resultados = sim.getResultados()
-    setDatos(resultados)
+
+    //RESULTADOS VAR ESTADISTICAS
+    //const resultados = sim.getResultados()
+    //setDatos(resultados)
 
     // Calcular var estadisticas
     //const clientesTotales = resultados.length
