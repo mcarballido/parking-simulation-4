@@ -1,39 +1,37 @@
 import React, { useState } from 'react'
-import DataTable from './components/DataTable.js'
-import SimForm from './components/SimForm.js'
-import Simulation from './Simulation'
+import SimulacionTabla from './components/SimulacionTabla'
+import SimulacionFormulario from './components/SimulacionFormulario'
+import TrabajoPractico from './simulacion'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [datos, setDatos] = useState([])
+  const [porcentajeClientesTristes, setPorcentajeClientesTristes] = useState(0)
 
-  const handleSimulation = formValues => {
-    const { cantidadFilasASimular, filaASimularDesde, cantidadFilasAMostrar } = formValues
-    const sim = new Simulation()
-    sim.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
-    sim.FILA_A_SIMULAR_DESDE = filaASimularDesde
-    sim.CANTIDAD_FILAS_A_MOSTRAR = cantidadFilasAMostrar
-    sim.comenzarEjecucion()
-    const resultados = sim.getResultados()
+  const handleSimulacion = formValues => {
+    const { stockInicial, cantidadFilasASimular, filaASimularDesde, cantidadFilasAMostrar, pasoH } = formValues
+    const tp = new TrabajoPractico()
+    tp.STOCK_INICIAL = stockInicial
+    tp.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
+    tp.FILA_A_SIMULAR_DESDE = filaASimularDesde
+    tp.CANTIDAD_FILAS_A_MOSTRAR = cantidadFilasAMostrar
+    tp.PASO_H = pasoH
+    tp.comenzarEjecucion()
+    const resultados = tp.getResultados()
     setDatos(resultados)
 
-    // Calcular var estadisticas
-    //const clientesTotales = resultados.length
-    //const clientesTristes = resultados.filter(fila => fila.evento === 'FinCoccionHorno').length
-
+    // Calcular el porcentaje de clientes tristes
+    const clientesTotales = resultados.length
+    const clientesTristes = resultados.filter(fila => fila.evento === 'FinCoccionHorno').length
+    const porcentaje = (clientesTristes / clientesTotales) * 100
+    setPorcentajeClientesTristes(porcentaje)
   }
-  // return (
-  //   <div className="App">
-  //     <h1>Simulación de Estacionamiento</h1>
-  //     <Form onSubmit={handleSimulation} />
-  //     {datos.length > 0 && <Table data={datos} porcentajeClientesTristes={porcentajeClientesTristes} />}
-  //   </div>
-  // )
+
   return (
     <div className="App">
-      <h1>Simulación de Estacionamiento</h1>
-      <SimForm onSubmit={handleSimulation} />
-      
+      <h1>Simulación de Panadería</h1>
+      <SimulacionFormulario onSubmit={handleSimulacion} />
+      {datos.length > 0 && <SimulacionTabla data={datos} porcentajeClientesTristes={porcentajeClientesTristes} />}
     </div>
   )
 }
