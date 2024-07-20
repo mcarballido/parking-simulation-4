@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 export const CANTIDAD_DE_FILAS_A_SIMULAR = 'CANTIDAD_DE_FILAS_A_SIMULAR';
+//export const CANTIDAD_HORAS_A_SIMULAR = 'CANTIDAD_HORAS_A_SIMULAR';
 
 
 const SimForm = ({ onSubmit }) => {
@@ -8,7 +9,7 @@ const SimForm = ({ onSubmit }) => {
     cantidadFilasASimular: 60,
     filaASimularDesde: 0,
     cantidadFilasAMostrar: 100,
-    pasoH: 0.1,
+    cantidadHorasASimular:0,
   });
 
   const handleChange = (e) => {
@@ -35,6 +36,7 @@ const SimForm = ({ onSubmit }) => {
             </Form.Group>
           </Col>
         </Row>
+
         <Row>
           <Col>
             <Form.Group controlId="filaASimularDesde">

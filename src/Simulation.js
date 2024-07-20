@@ -1,5 +1,6 @@
-const CANTIDAD_DE_FILAS_A_SIMULAR = 100
-const CANTIDAD_HORAS_A_SIMULAR = 10000
+
+import {CANTIDAD_DE_FILAS_A_SIMULAR } from './components/SimForm'
+//import { CANTIDAD_HORAS_A_SIMULAR} from './components/SimForm'
 
 class Auto {
   constructor(nro, tamano, estado, lugar, costo) {
@@ -19,6 +20,14 @@ class Lugar {
 }
 
 class Simulation {
+    constructor(cantidadFilasASimular) {
+        this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
+        this.resultados = []
+        //VARIABLES ESTADISTICAS
+        //this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
+        //this.porcentajeClientesTristes = 0
+      }
+
   mostrarDatos(evento, datos) {
     const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
@@ -102,14 +111,15 @@ class Simulation {
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
       colaEventos: [new EventoLlegadaAuto(0)],
+      
     }
 
     for (let fila = 0; fila < CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
       const eventoProximo = this.extraerEventoProximo(datos)
 
-      if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
-        break
-      }
+      //if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
+     //   break
+      //}
 
       eventoProximo.ocurreEvento(datos)
 
@@ -159,12 +169,14 @@ class Simulation {
         
     };
 
-   
-
     
     if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
         this.resultados.push({ ...filaDatos, nroFila: fila })
     }}
+  }
+
+  getResultados() {
+    return this.resultados
   }
 }
 
@@ -348,9 +360,7 @@ class EventoFinCobro {
     }
   }
 
-  getResultados() {
-    return this.resultados
-  }
+
 }
 
 //new Simulation().comenzarEjecucion()
