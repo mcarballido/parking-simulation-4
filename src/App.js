@@ -1,47 +1,41 @@
-// src/App.js
-import React, { useState, useEffect } from 'react';
-import DataTable from './DataTable';
+import React, { useState } from 'react'
+import DataTable from './components/DataTable.js'
+import Form from './components/Form'
+import Simulation from './Simulation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const App = () => {
-  const [data, setData] = useState([]);
+function App() {
+  const [datos, setDatos] = useState([])
 
-  useEffect(() => {
-    // Aquí puedes realizar una llamada a una API o simplemente simular datos
-    const fetchData = async () => {
-      // Simulación de datos
-      const simulatedData = [
-        {
-          nombreEvento: 'Evento1',
-          tiempoActual: '10:00',
-          randomLlegada: 0.5,
-          proximaLlegada: '10:05',
-          randomFinEstacionamiento: 0.8,
-          tiempoFinEstacionamiento: '10:30',
-          randomTamano: 0.3,
-          tamanoVehiculo: 'Pequeño',
-          finDeCobro: '10:35',
-          estadoDeCaja: 'Libre',
-          cantidadAutosEnColaParaCaja: 2,
-          cantidadLugaresDisponibles: 5,
-          cantidadAutosQuePagaron: 10,
-          totalAcumulado: 200,
-          estadoDeAutos: 'Estacionado'
-        },
-        // Más datos aquí...
-      ];
-      setData(simulatedData);
-    };
+  const handleSimulation = formValues => {
+    const { cantidadFilasASimular, filaASimularDesde, cantidadFilasAMostrar } = formValues
+    const sim = new Simulation()
+    sim.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
+    sim.FILA_A_SIMULAR_DESDE = filaASimularDesde
+    sim.CANTIDAD_FILAS_A_MOSTRAR = cantidadFilasAMostrar
+    sim.comenzarEjecucion()
+    const resultados = sim.getResultados()
+    setDatos(resultados)
 
-    fetchData();
-  }, []);
+    // Calcular var estadisticas
+    //const clientesTotales = resultados.length
+    //const clientesTristes = resultados.filter(fila => fila.evento === 'FinCoccionHorno').length
 
+  }
+  // return (
+  //   <div className="App">
+  //     <h1>Simulación de Estacionamiento</h1>
+  //     <Form onSubmit={handleSimulation} />
+  //     {datos.length > 0 && <Table data={datos} porcentajeClientesTristes={porcentajeClientesTristes} />}
+  //   </div>
+  // )
   return (
     <div className="App">
       <h1>Simulación de Estacionamiento</h1>
-      <DataTable data={data} />
+      <Form onSubmit={handleSimulation} />
+      
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
