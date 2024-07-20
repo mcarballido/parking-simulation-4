@@ -1,11 +1,56 @@
 import { CANTIDAD_DE_FILAS_A_SIMULAR } from './components/SimulacionFormulario'
 
 class Simulation {
+  //Esto estaba en padaderia
   constructor(cantidadFilasASimular) {
     this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
     this.resultados = []
     //this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
     //this.porcentajeClientesTristes = 0
+  }
+
+  mostrarDatos(evento, datos) {
+    const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
+    ).length
+    const utilitariosLibres = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
+    ).length
+    const utilitariosOcupados = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
+    ).length
+    const grandesLibres = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
+    ).length
+    const grandesOcupados = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
+    ).length
+    const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
+    ).length
+    const pequeñosOcupados = datos.lugaresDeEstacionamiento.filter(
+      lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
+    ).length
+    const autos = datos.autosIngresados.map(auto => {
+      return { nro: auto.nro, estado: auto.estado }
+    })
+    const filaCaja = datos.filaCaja.map(auto => {
+      return { nro: auto.nro }
+    })
+    const colaEventos = datos.colaEventos.map(evento => {
+      return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
+    })
+
+    // console.log(
+    //   `${evento.constructor.name} - t: ${evento.tiempoDeOcurrencia} \nProximos Eventos: ${JSON.stringify(
+    //     colaEventos
+    //   )} \nAutos Ingresados: ${JSON.stringify(autos)} \nCaja Ocupada: ${
+    //     datos.cajaOcupada
+    //   } - Fila en Caja: ${JSON.stringify(
+    //     filaCaja
+    //   )}\nLugares Utilitarios Parcialmente Libres: ${utilitariosParcialmenteLibres} - Lugares Utilitarios Libres: ${utilitariosLibres} - Lugares Utilitarios Ocupados: ${utilitariosOcupados} - Lugares Grandes Libres: ${grandesLibres} - Lugares Grandes Ocupados: ${grandesOcupados} - Lugares Pequeños Libres: ${pequeñosLibres} - Lugares Pequeños Ocupados: ${pequeñosOcupados}`
+    // )
+    // console.log()
   }
 
   comenzarEjecucion() {
