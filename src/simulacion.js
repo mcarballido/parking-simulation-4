@@ -1,12 +1,11 @@
 import { CANTIDAD_DE_FILAS_A_SIMULAR } from './components/SimulacionFormulario'
 
 class TrabajoPractico {
-  constructor(stockInicial, cantidadFilasASimular) {
-    this.STOCK_INICIAL = stockInicial
+  constructor(cantidadFilasASimular) {
     this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
     this.resultados = []
-    this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
-    this.porcentajeClientesTristes = 0
+    //this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
+    //this.porcentajeClientesTristes = 0
   }
 
   comenzarEjecucion() {
