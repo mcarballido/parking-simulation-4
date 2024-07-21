@@ -19,6 +19,10 @@
 
 // auto35 = { tamaño: peque, lugar: null }
 
+//NOTAS:
+//NUNCA HAY UTILITARIOS PARCIALMENTE LIBRES
+//NO SE MUESTRAN LOS ACUMULADORES
+
 const CANTIDAD_DE_FILAS_A_SIMULAR = 100
 const CANTIDAD_HORAS_A_SIMULAR = 10000
 
@@ -114,29 +118,23 @@ constructor(stockInicial, cantidadFilasASimular) {
           const utilitariosLibres = datos.lugaresDeEstacionamiento.filter(
             lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
           ).length
-          const utilitariosOcupados = datos.lugaresDeEstacionamiento.filter(
-            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
-          ).length
+
           const grandesLibres = datos.lugaresDeEstacionamiento.filter(
             lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
           ).length
-          const grandesOcupados = datos.lugaresDeEstacionamiento.filter(
-            lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
-          ).length
+
           const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
             lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
           ).length
-          const pequeñosOcupados = datos.lugaresDeEstacionamiento.filter(
-            lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
-          ).length
+
           const autos = datos.autosIngresados.map(auto => {
-            return { nro: auto.nro, estado: auto.estado }
+            return { nro: auto.nro, estado: auto.estado,tamano:auto.tamano }
           })
           const filaCaja = datos.filaCaja.map(auto => {
             return { nro: auto.nro }
           })
           const colaEventos = datos.colaEventos.map(evento => {
-            return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
+            return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia, rndLlegada:evento.constructor.randomTiempo }
           })
 
       const eventoProximo = this.extraerEventoProximo(datos)
@@ -151,19 +149,29 @@ constructor(stockInicial, cantidadFilasASimular) {
 
       this.mostrarDatos(eventoProximo, datos)
       
+      //crear distintas definiciones de const segun el evento?
       const filaDatos = {
-        tiempo: eventoProximo.tiempoDeOcurrencia,
         evento: eventoProximo.constructor.name,
+        tiempo: eventoProximo.tiempoDeOcurrencia,
+        // buscar para el auto que ingreso, rnd tamano y tamano
+        //tamano:
+        rndLlegada: eventoProximo.randomTiempo,
+        //tEntreLlegadas
+        //proximaLlegada
+        //rndEstacionamiento
+        //tEstacionamiento
+        //finEstacionamiento(i)
+        //rndCobro
+        //tCobro
+        //finCobro
+        //estadoCajero
+        filaCaja: [...datos.filaCaja],
+        //autosIngresados
         utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
         utilitariosLibres: utilitariosLibres,
-        utilitariosOcupados: utilitariosOcupados,
         grandesLibres:grandesLibres,
-        grandesOcupados:grandesOcupados,
         pequeñosLibres:pequeñosLibres,
-        pequeñosOcupados:pequeñosOcupados,
         autos:autos,
-
-        filaCaja: [...datos.filaCaja],
         eventosCola: datos.colaEventos.map(eventoProximo => ({
           tiempo: eventoProximo.tiempoDeOcurrencia,
           evento: eventoProximo.constructor.name,
