@@ -40,7 +40,7 @@ class Lugar {
 }
 
 class Simulation {
-    constructor(stockInicial, cantidadFilasASimular) {
+constructor(stockInicial, cantidadFilasASimular) {
 
         this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
         this.resultados = []
@@ -90,29 +90,6 @@ class Simulation {
     )
     console.log()
   }
-
-  extraerEventoProximo(datos) {
-    let eventoMasCercano = datos.colaEventos[0]
-
-    datos.colaEventos.forEach(evento => {
-      if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
-        eventoMasCercano = evento
-      }
-    })
-
-    // Encontrar el índice del objeto con el tiempoDeOcurrencia específico
-    let indice = datos.colaEventos.findIndex(
-      evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
-    )
-
-    // Si se encuentra el objeto, eliminarlo del arreglo
-    if (indice !== -1) {
-      datos.colaEventos.splice(indice, 1)
-    }
-
-    return eventoMasCercano
-  }
-
   comenzarEjecucion() {
     const lugaresPequenos = Array.from({ length: 10 }, () => new Lugar('pequeño', 0))
     const lugaresGrandes = Array.from({ length: 6 }, () => new Lugar('grande', 0))
@@ -128,7 +105,8 @@ class Simulation {
       acumuladorPlata: 0,
       colaEventos: [new EventoLlegadaAuto(0)],
     }
-    
+    this.inicializarEventos(datos)
+
     for (let fila = 0; fila < CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
         const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
             lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
@@ -172,7 +150,7 @@ class Simulation {
       datos.tiempo = eventoProximo.tiempoDeOcurrencia
 
       this.mostrarDatos(eventoProximo, datos)
-
+      
       const filaDatos = {
         tiempo: eventoProximo.tiempo,
         evento: eventoProximo.constructor.name,
@@ -192,13 +170,47 @@ class Simulation {
          
         })),
       }
+      console.log("hasta aca fila", filaDatos)
 
       if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
         this.resultados.push({ ...filaDatos, nroFila: fila })
       }
     }
+
+    
   }
+  extraerEventoProximo(datos) {
+    let eventoMasCercano = datos.colaEventos[0]
+
+    datos.colaEventos.forEach(evento => {
+      if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
+        eventoMasCercano = evento
+      }
+    })
+
+    // Encontrar el índice del objeto con el tiempoDeOcurrencia específico
+    let indice = datos.colaEventos.findIndex(
+      evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
+    )
+
+    // Si se encuentra el objeto, eliminarlo del arreglo
+    if (indice !== -1) {
+      datos.colaEventos.splice(indice, 1)
+    }
+
+    return eventoMasCercano
+  }
+  inicializarEventos(datos) {
+    datos.colaEventos.push(new EventoLlegadaAuto(0))
+  }
+
+  getResultados() {
+    return this.resultados
+  }
+ 
 }
+
+
 
 function tamanoDeAuto(random) {
   if (random < 0.6) {

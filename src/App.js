@@ -16,8 +16,8 @@ function App() {
     sim.comenzarEjecucion()
 
     //RESULTADOS VAR ESTADISTICAS
-    //const resultados = sim.getResultados()
-    //setDatos(resultados)
+    const resultados = sim.getResultados()
+    setDatos(resultados)
 
     // Calcular var estadisticas
     //const clientesTotales = resultados.length
