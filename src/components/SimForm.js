@@ -1,4 +1,3 @@
-//simForm
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 export const CANTIDAD_DE_FILAS_A_SIMULAR = 'CANTIDAD_DE_FILAS_A_SIMULAR';
@@ -7,9 +6,9 @@ export const CANTIDAD_DE_FILAS_A_SIMULAR = 'CANTIDAD_DE_FILAS_A_SIMULAR';
 
 const SimForm = ({ onSubmit }) => {
   const [formValues, setFormValues] = useState({
-    cantidadFilasASimular: 60,
+    cantidadFilasASimular: 20,
     filaASimularDesde: 0,
-    cantidadFilasAMostrar: 30,
+    cantidadFilasAMostrar: 100,
     cantidadHorasASimular:0,
   });
 

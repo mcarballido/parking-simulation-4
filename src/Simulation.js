@@ -1,105 +1,125 @@
-//simulation
-import { CANTIDAD_DE_FILAS_A_SIMULAR } from "./components/SimForm";
+// import { CANTIDAD_DE_FILAS_A_SIMULAR, CANTIDAD_HORAS_A_SIMULAR } from './components/SimulacionFormulario'
+
+// lugaresDeEstacionamiento = [
+//    { tipo: utilitario, ocupados: 0 },
+//    { tipo: utilitario, ocupados: 0 },
+//    { tipo: peque, ocupados: 0 }
+// ]
+
+// FinDeEstadia: auto35
+// auto35 = { tamaño: peque, lugar: Lugar1{ tipo: utilitario, ocupados: 1 } }
+// auto36 = { tamaño: peque, lugar: Lugar1{ tipo: utilitario, ocupados: 2 } }
+//
+// auto35 = { tamaño: peque, lugar: { tipo: utilitario, ocupados: 0 } }
+//
+// auto35 = { tamaño: peque, lugar: null }
+
+// LlegadaVehiculo: auto36
+// auto36 = { tamaño: utilitario, lugar: { tipo: utilitario, ocupados: 0 }, }
+
+// auto35 = { tamaño: peque, lugar: null }
+
+const CANTIDAD_DE_FILAS_A_SIMULAR = 100
+const CANTIDAD_HORAS_A_SIMULAR = 10000
+
+class Auto {
+  constructor(nro, tamano, estado, lugar, costo) {
+    this.nro = nro
+    this.tamano = tamano // pequeño
+    this.estado = estado // estacionado, esperando pagar, pagando
+    this.lugar = lugar // { tipo: grande }
+    this.costo = costo
+  }
+}
+
+class Lugar {
+  constructor(tamano, ocupados) {
+    this.tamano = tamano // grande, pequeño, utilitario
+    this.ocupados = ocupados // 0, 1, 2
+  }
+}
 
 class Simulation {
-  //Esto estaba en padaderia
-  constructor(cantidadFilasASimular) {
-    this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular;
-    this.resultados = [];
-    //this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
-    //this.porcentajeClientesTristes = 0
-  }
+    constructor(stockInicial, cantidadFilasASimular) {
 
+        this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
+        this.resultados = []
+       // this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
+        //this.porcentajeClientesTristes = 0
+      }
   mostrarDatos(evento, datos) {
     const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "utilitario" && lugar.ocupados === 1
-    ).length;
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
+    ).length
     const utilitariosLibres = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "utilitario" && lugar.ocupados === 0
-    ).length;
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
+    ).length
     const utilitariosOcupados = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "utilitario" && lugar.ocupados === 2
-    ).length;
+      lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
+    ).length
     const grandesLibres = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "grande" && lugar.ocupados === 0
-    ).length;
+      lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
+    ).length
     const grandesOcupados = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "grande" && lugar.ocupados === 1
-    ).length;
+      lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
+    ).length
     const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "pequeño" && lugar.ocupados === 0
-    ).length;
+      lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
+    ).length
     const pequeñosOcupados = datos.lugaresDeEstacionamiento.filter(
-      (lugar) => lugar.tamano === "pequeño" && lugar.ocupados === 1
-    ).length;
-    const autos = datos.autosIngresados.map((auto) => {
-      return { nro: auto.nro, estado: auto.estado };
-    });
-    const filaCaja = datos.filaCaja.map((auto) => {
-      return { nro: auto.nro };
-    });
-    const colaEventos = datos.colaEventos.map((evento) => {
-      return {
-        nombre: evento.constructor.name,
-        tiempo: evento.tiempoDeOcurrencia,
-      };
-    });
+      lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
+    ).length
+    const autos = datos.autosIngresados.map(auto => {
+      return { nro: auto.nro, estado: auto.estado }
+    })
+    const filaCaja = datos.filaCaja.map(auto => {
+      return { nro: auto.nro }
+    })
+    const colaEventos = datos.colaEventos.map(evento => {
+      return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
+    })
 
-     console.log(
-       `${evento.constructor.name} - t: ${evento.tiempoDeOcurrencia} \nProximos Eventos: ${JSON.stringify(
-         colaEventos
-       )} \nAutos Ingresados: ${JSON.stringify(autos)} \nCaja Ocupada: ${
-         datos.cajaOcupada
-       } - Fila en Caja: ${JSON.stringify(
-         filaCaja
+    console.log(
+      `${evento.constructor.name} - t: ${evento.tiempoDeOcurrencia} \nProximos Eventos: ${JSON.stringify(
+        colaEventos
+      )} \nAutos Ingresados: ${JSON.stringify(autos)} \nCaja Ocupada: ${
+        datos.cajaOcupada
+      } - Fila en Caja: ${JSON.stringify(
+        filaCaja
       )}\nLugares Utilitarios Parcialmente Libres: ${utilitariosParcialmenteLibres} - Lugares Utilitarios Libres: ${utilitariosLibres} - Lugares Utilitarios Ocupados: ${utilitariosOcupados} - Lugares Grandes Libres: ${grandesLibres} - Lugares Grandes Ocupados: ${grandesOcupados} - Lugares Pequeños Libres: ${pequeñosLibres} - Lugares Pequeños Ocupados: ${pequeñosOcupados}`
     )
-     console.log()
+    console.log()
   }
 
-  //extraer evento proximo es metodo de panaderia
-  // extraerEventoProximo(datos) {
-  //   let eventoMasCercano = datos.colaEventos[0]
+  extraerEventoProximo(datos) {
+    let eventoMasCercano = datos.colaEventos[0]
 
-  //   datos.colaEventos.forEach(evento => {
-  //     if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
-  //       eventoMasCercano = evento
-  //     }
-  //   })
+    datos.colaEventos.forEach(evento => {
+      if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
+        eventoMasCercano = evento
+      }
+    })
 
-  //   // Encontrar el índice del objeto con el tiempoDeOcurrencia específico
-  //   let indice = datos.colaEventos.findIndex(
-  //     evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
-  //   )
+    // Encontrar el índice del objeto con el tiempoDeOcurrencia específico
+    let indice = datos.colaEventos.findIndex(
+      evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
+    )
 
-  //   // Si se encuentra el objeto, eliminarlo del arreglo
-  //   if (indice !== -1) {
-  //     datos.colaEventos.splice(indice, 1)
-  //   }
+    // Si se encuentra el objeto, eliminarlo del arreglo
+    if (indice !== -1) {
+      datos.colaEventos.splice(indice, 1)
+    }
 
-  //   return eventoMasCercano
-  // }
+    return eventoMasCercano
+  }
 
   comenzarEjecucion() {
-    const lugaresPequenos = Array.from(
-      { length: 10 },
-      () => new Lugar("pequeño", 0)
-    );
-    const lugaresGrandes = Array.from(
-      { length: 6 },
-      () => new Lugar("grande", 0)
-    );
-    const lugaresUtilitarios = Array.from(
-      { length: 4 },
-      () => new Lugar("utilitario", 0)
-    );
+    const lugaresPequenos = Array.from({ length: 10 }, () => new Lugar('pequeño', 0))
+    const lugaresGrandes = Array.from({ length: 6 }, () => new Lugar('grande', 0))
+    const lugaresUtilitarios = Array.from({ length: 4 }, () => new Lugar('utilitario', 0))
 
     const datos = {
-      lugaresDeEstacionamiento: [
-        ...lugaresPequenos,
-        ...lugaresGrandes,
-        ...lugaresUtilitarios,
-      ],
+      lugaresDeEstacionamiento: [...lugaresPequenos, ...lugaresGrandes, ...lugaresUtilitarios],
       autosIngresados: [],
       cajaOcupada: false,
       filaCaja: [],
@@ -107,100 +127,79 @@ class Simulation {
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
       colaEventos: [new EventoLlegadaAuto(0)],
-    };
+    }
+    
+    for (let fila = 0; fila < CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
+        const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
+          ).length
+          const utilitariosLibres = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
+          ).length
+          const utilitariosOcupados = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
+          ).length
+          const grandesLibres = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
+          ).length
+          const grandesOcupados = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
+          ).length
+          const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
+          ).length
+          const pequeñosOcupados = datos.lugaresDeEstacionamiento.filter(
+            lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
+          ).length
+          const autos = datos.autosIngresados.map(auto => {
+            return { nro: auto.nro, estado: auto.estado }
+          })
+          const filaCaja = datos.filaCaja.map(auto => {
+            return { nro: auto.nro }
+          })
+          const colaEventos = datos.colaEventos.map(evento => {
+            return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
+          })
 
-    console.log("datos:",datos.lugaresDeEstacionamiento,datos.autosIngresados,datos.cajaOcupada)
-    //metodo de panaderia
-    //this.inicializarEventos(datos)
+      const eventoProximo = this.extraerEventoProximo(datos)
 
-    //MOSTRAR DATOS PANADERIA
-    // for (let fila = 1; fila < this.CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
-    //   const eventoInminente = this.encontrarEventoMasProximo(datos)
+      if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
+        break
+      }
 
-    //   eventoInminente.ocurreEvento(datos)
+      eventoProximo.ocurreEvento(datos)
 
-    //   const filaDatos = {
-    //     tiempo: eventoInminente.tiempo,
-    //     evento: eventoInminente.constructor.name,
-    //     nroCliente: eventoInminente.nroCliente,
-    //     stock: datos.stock,
-    //     empleadosLibres: datos.empleadosLibres,
-    //     colaClientes: [...datos.colaClientes],
-    //     eventosCola: datos.colaEventos.map(evento => ({
-    //       tiempo: evento.tiempo,
-    //       evento: evento.constructor.name,
-    //       nroCliente: evento.nroCliente,
-    //     })),
-    //   }
+      datos.tiempo = eventoProximo.tiempoDeOcurrencia
 
-    //   if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
-    //     this.resultados.push({ ...filaDatos, nroFila: fila })
-    //   }
-    // }
+      this.mostrarDatos(eventoProximo, datos)
 
-    //ejecutar y MOSTRAR DATOS ESTACIONAMIENTO
-    for (let i = 0; i < CANTIDAD_DE_FILAS_A_SIMULAR; i++) {
-      const eventoProximo = this.extraerEventoProximo(datos);
+      const filaDatos = {
+        tiempo: eventoProximo.tiempo,
+        evento: eventoProximo.constructor.name,
+        utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
+        utilitariosLibres: utilitariosLibres,
+        utilitariosOcupados: utilitariosOcupados,
+        grandesLibres:grandesLibres,
+        grandesOcupados:grandesOcupados,
+        pequeñosLibres:pequeñosLibres,
+        pequeñosOcupados:pequeñosOcupados,
+        autos:autos,
 
-      // if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
-      //   break;
-      // }
+        filaCaja: [...datos.filaCaja],
+        eventosCola: datos.colaEventos.map(eventoProximo => ({
+          tiempo: eventoProximo.tiempoDeOcurrencia,
+          evento: eventoProximo.constructor.name,
+         
+        })),
+      }
 
-      eventoProximo.ocurreEvento(datos);
-
-      datos.tiempo = eventoProximo.tiempoDeOcurrencia;
-
-      this.mostrarDatos(eventoProximo, datos);
+      if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
+        this.resultados.push({ ...filaDatos, nroFila: fila })
+      }
     }
   }
 }
-//   //corresponde a panaderia
-//   encontrarEventoMasProximo(datos) {
-//     const eventoEncontrado = datos.colaEventos.reduce(
-//       (eventoMinimo, evento) =>
-//         evento.tiempo < eventoMinimo.tiempo ? evento : eventoMinimo,
-//       datos.colaEventos[0]
-//     );
 
-//     datos.colaEventos = datos.colaEventos.filter(
-//       (evento) => evento !== eventoEncontrado
-//     );
-
-//     return eventoEncontrado;
-//   }
-
-//   //inicializacio9n de eventos panaderia
-//   inicializarEventos(datos) {
-//     datos.colaEventos.push(new LlegadaCliente(0, 1));
-
-//     if (datos.stock === 0) {
-//       datos.colaEventos.push(new FinCoccionHorno(0, 0));
-//     } else {
-//       datos.colaEventos.push(new EncendidoHorno45Minutos(0));
-//     }
-//   }
-
-//   getResultados() {
-//     return this.resultados;
-//   }
-// }
-
-class Auto {
-  constructor(nro, tamano, estado, lugar, costo) {
-    this.nro = nro;
-    this.tamano = tamano; // pequeño
-    this.estado = estado; // estacionado, esperando pagar, pagando
-    this.lugar = lugar; // { tipo: grande }
-    this.costo = costo;
-  }
-}
-
-class Lugar {
-  constructor(tamano, ocupados) {
-    this.tamano = tamano; // grande, pequeño, utilitario
-    this.ocupados = ocupados; // 0, 1, 2
-  }
-}
 function tamanoDeAuto(random) {
   if (random < 0.6) {
     return 'pequeño'
@@ -382,6 +381,5 @@ class EventoFinCobro {
   }
 }
 
-//como corrrer simulacion M con salida en consola
-//new Simulation().comenzarEjecucion()
+//new TrabajoPractico().comenzarEjecucion()
 export default Simulation
