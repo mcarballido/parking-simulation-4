@@ -22,6 +22,7 @@
 //NOTAS:
 //NUNCA HAY UTILITARIOS PARCIALMENTE LIBRES
 //NO SE MUESTRAN LOS ACUMULADORES
+//MANTENER ID DE EVENTOS, TRAZABILIDAD
 
 const CANTIDAD_DE_FILAS_A_SIMULAR = 100
 const CANTIDAD_HORAS_A_SIMULAR = 10000
@@ -102,11 +103,12 @@ constructor(stockInicial, cantidadFilasASimular) {
     const datos = {
       lugaresDeEstacionamiento: [...lugaresPequenos, ...lugaresGrandes, ...lugaresUtilitarios],
       autosIngresados: [],
-      cajaOcupada: false,
+      cajaOcupada: "ocupada",
       filaCaja: [],
       cantAutosIngresados: 0,
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
+      //no se si habria que sacar este evento de aca porque ya arranca un llegada auto cuando se llama a la funcion inicializacion
       colaEventos: [new EventoLlegadaAuto(0)],
     }
     this.inicializarEventos(datos)
@@ -150,6 +152,8 @@ constructor(stockInicial, cantidadFilasASimular) {
       this.mostrarDatos(eventoProximo, datos)
       
       //crear distintas definiciones de const segun el evento?
+      console.log("caja ocupada???!",datos.cajaOcupada)
+      
       const filaDatos = {
         evento: eventoProximo.constructor.name,
         tiempo: eventoProximo.tiempoDeOcurrencia,
@@ -164,7 +168,7 @@ constructor(stockInicial, cantidadFilasASimular) {
         //rndCobro
         //tCobro
         //finCobro
-        //estadoCajero
+        estadoCajero:datos.cajaOcupada,
         filaCaja: [...datos.filaCaja],
         //autosIngresados
         utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
@@ -364,7 +368,7 @@ class EventoFinEstacionamiento {
         datos.filaCaja.push(this.auto)
       } else {
         this.auto.estado = 'pagando'
-        datos.cajaOcupada = true
+        datos.cajaOcupada = "libre"
 
         datos.colaEventos.push(new EventoFinCobro(this.tiempoDeOcurrencia, this.auto))
       }
@@ -396,7 +400,7 @@ class EventoFinCobro {
 
       datos.colaEventos.push(new EventoFinCobro(this.tiempoDeOcurrencia, proximoAuto))
     } else {
-      datos.cajaOcupada = false
+      datos.cajaOcupada = "ocupada"
     }
   }
 }
