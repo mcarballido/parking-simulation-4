@@ -101,6 +101,7 @@ constructor(stockInicial, cantidadFilasASimular) {
     const lugaresUtilitarios = Array.from({ length: 4 }, () => new Lugar('utilitario', 0))
 
     const datos = {
+      nroAuto: 0,
       lugaresDeEstacionamiento: [...lugaresPequenos, ...lugaresGrandes, ...lugaresUtilitarios],
       autosIngresados: [],
       cajaOcupada: "ocupada",
@@ -109,7 +110,7 @@ constructor(stockInicial, cantidadFilasASimular) {
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
       //no se si habria que sacar este evento de aca porque ya arranca un llegada auto cuando se llama a la funcion inicializacion
-      colaEventos: [new EventoLlegadaAuto(0)],
+      colaEventos: [new EventoLlegadaAuto(0,1)],
     }
     this.inicializarEventos(datos)
 
@@ -156,6 +157,7 @@ constructor(stockInicial, cantidadFilasASimular) {
       
       const filaDatos = {
         evento: eventoProximo.constructor.name,
+        nroAuto: eventoProximo.nroAuto || '', // Obtenemos nroAuto si existe
         tiempo: eventoProximo.tiempoDeOcurrencia,
         // buscar para el auto que ingreso, rnd tamano y tamano
         //tamano:
@@ -213,7 +215,7 @@ constructor(stockInicial, cantidadFilasASimular) {
     return eventoMasCercano
   }
   inicializarEventos(datos) {
-    datos.colaEventos.push(new EventoLlegadaAuto(0))
+    datos.colaEventos.push(new EventoLlegadaAuto(0,datos.nroAuto + 1))
   }
 
   getResultados() {
@@ -235,11 +237,12 @@ function tamanoDeAuto(random) {
 }
 
 class EventoLlegadaAuto {
-  constructor(tiempoActual) {
+  constructor(tiempoActual,nroAuto) {
     // constructor es cuando creamos el evento
     this.randomTiempo = Math.random()
     this.tiempoEntreLlegadas = 12 + this.randomTiempo * (14 - 12)
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas
+    this.nroAuto = nroAuto;
   }
 
   ocurreEvento(datos) {
@@ -308,7 +311,7 @@ class EventoLlegadaAuto {
       datos.colaEventos.push(new EventoFinEstacionamiento(this.tiempoDeOcurrencia, autoQueLlega))
     }
 
-    datos.colaEventos.push(new EventoLlegadaAuto(this.tiempoDeOcurrencia))
+    datos.colaEventos.push(new EventoLlegadaAuto(this.tiempoDeOcurrencia,nroAuto))
   }
 }
 
