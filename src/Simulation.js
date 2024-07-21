@@ -152,7 +152,7 @@ constructor(stockInicial, cantidadFilasASimular) {
       this.mostrarDatos(eventoProximo, datos)
       
       const filaDatos = {
-        tiempo: eventoProximo.tiempo,
+        tiempo: eventoProximo.tiempoDeOcurrencia,
         evento: eventoProximo.constructor.name,
         utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
         utilitariosLibres: utilitariosLibres,
