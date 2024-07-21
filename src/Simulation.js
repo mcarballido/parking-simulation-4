@@ -104,6 +104,7 @@ class Simulation {
 
     const datos = {
       nroAuto: 0,
+      tiempoActual: 0,
       lugaresDeEstacionamiento: [...lugaresPequenos, ...lugaresGrandes, ...lugaresUtilitarios],
       autosIngresados: [],
       cajaOcupada: "libre",
@@ -111,7 +112,11 @@ class Simulation {
       cantAutosIngresados: 0,
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
-      colaEventos: []
+      colaEventos: [],
+      tiempoEntreLlegadas: 0,
+      proximaLlegada: 0,
+      rndLlegada: 0,
+      //proximaLlegada:0,
     };
 
     this.inicializarEventos(datos);
@@ -147,16 +152,14 @@ class Simulation {
       }
 
       eventoProximo.ocurreEvento(datos);
-
-      datos.tiempo = eventoProximo.tiempoDeOcurrencia;
+      
 
       this.mostrarDatos(eventoProximo, datos);
 
       const filaDatos = {
         evento: eventoProximo.constructor.name,
         nroAuto: eventoProximo.nroAuto || '', // Obtenemos nroAuto si existe
-        tiempo: eventoProximo.tiempoDeOcurrencia,
-        rndLlegada: eventoProximo.randomTiempo,
+        tiempoActual: datos.tiempoActual,
         estadoCajero: datos.cajaOcupada,
         filaCaja: [...datos.filaCaja],
         utilitariosParcialmenteLibres: utilitariosParcialmenteLibres,
@@ -176,6 +179,9 @@ class Simulation {
       if (eventoProximo instanceof EventoLlegadaAuto) {
         filaDatos.rndTamano = eventoProximo.rndTamano;
         filaDatos.tamano = eventoProximo.tamano;
+        filaDatos.tiempoEntreLlegadas = eventoProximo.tiempoEntreLlegadas;
+        filaDatos.rndLlegada = eventoProximo.rndLlegada;
+        filaDatos.proximaLlegada = eventoProximo.tiempoDeOcurrencia;
       }
 
       console.log("hasta aca fila", filaDatos);
@@ -183,6 +189,7 @@ class Simulation {
       if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
         this.resultados.push({ ...filaDatos, nroFila: fila });
       }
+      datos.tiempoActual = eventoProximo.tiempoDeOcurrencia; // Actualiza el tiempo al tiempo de ocurrencia del evento
     }
   }
 
@@ -215,8 +222,6 @@ class Simulation {
   }
 }
 
-
-
 function tamanoDeAuto(random) {
   if (random < 0.6) {
     return 'pequeño'
@@ -229,17 +234,18 @@ function tamanoDeAuto(random) {
 
 class EventoLlegadaAuto {
   constructor(tiempoActual, nroAuto) {
-    this.randomTiempo = Math.random();
-    this.tiempoEntreLlegadas = 12 + this.randomTiempo * (14 - 12);
+    this.rndLlegada = Math.random();
+    this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
+    //this.proximaLlegada= tiempoActual + this.tiempoEntreLlegadas;
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
     this.nroAuto = nroAuto;
-    
     // Generar y almacenar el tamaño del auto y el valor rnd correspondiente
     this.rndTamano = Math.random();
     this.tamano = tamanoDeAuto(this.rndTamano);
   }
 
   ocurreEvento(datos) {
+    //datos.tiempoActual = this.tiempoDeOcurrencia; // Actualiza el tiempo actual al tiempo de ocurrencia
     const nroAuto = datos.nroAuto + 1;
     datos.nroAuto = nroAuto; // Incrementar globalmente
 
@@ -301,6 +307,9 @@ class EventoLlegadaAuto {
     }
   }
 }
+
+// Suponiendo que Auto y EventoFinEstacionamiento estén definidos en otra parte del código.
+
 function calcularTiempoDeEstadia(random) {
   if (random < 0.5) {
     return 60
