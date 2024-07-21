@@ -18,7 +18,6 @@ const DataTable = ({ data,variableEstadistica }) => {
                 <th>RND t. estac</th>
                 <th>T. estacionamiento</th>
                 <th>Fin Estacionamiento(i)</th>
-                <th>RND t.cobro</th>
                 <th>t cobro</th>
                 <th>Fin Cobro(i)</th>
                 <th>Estado Cajero</th>
@@ -47,7 +46,6 @@ const DataTable = ({ data,variableEstadistica }) => {
                   <th>{row.rndEstacionamiento}</th>
                   <td>{row.tEstacionamiento}</td>
                   <td>{row.finEstacionamiento}</td>
-                  <th>{row.rndCobro}</th>
                   <th>{row.tCobro}</th>
                   <td>{row.finCobro}</td>
                   <td>{JSON.stringify(row.estadoCajero)}</td>
