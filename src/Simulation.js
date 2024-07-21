@@ -166,6 +166,9 @@ constructor(stockInicial, cantidadFilasASimular) {
           tiempo: eventoProximo.tiempoDeOcurrencia,
           evento: eventoProximo.constructor.name,
         })),
+        acumuladorPlata:datos.acumuladorPlata,
+        cantAutosIngresados:datos.cantAutosIngresados,
+        cantAutosPagaron:datos.cantAutosPagaron,
       };
   
       console.log("hasta aca fila", filaDatos);
