@@ -8,6 +8,7 @@ const DataTable = ({ data,variableEstadistica }) => {
             <thead>
               <tr>
                 <th>Evento</th>
+                <th>N auto</th>
                 <th>Tiempo</th>
                 <th>RND tanano</th>
                 <th>Tamano vehiculo</th>
@@ -36,6 +37,7 @@ const DataTable = ({ data,variableEstadistica }) => {
               {data.map((row, index) => (
                 <tr key={index}>
                   <td>{row.evento}</td>
+                  <td>{JSON.stringify(row.nroAuto)}</td>
                   <td>{row.tiempo}</td>
                   <th>{row.rndTamano}</th>
                   <td>{row.tamanoVehiculo}</td>
@@ -50,7 +52,7 @@ const DataTable = ({ data,variableEstadistica }) => {
                   <td>{row.finCobro}</td>
                   <td>{JSON.stringify(row.estadoCajero)}</td>
                   <td>{JSON.stringify(row.filaCaja)}</td>   
-                  <td>{row.autosIngresados}</td>    
+                  <td>{row.cantAutosIngresados}</td>    
                   <td>{row.utilitariosParcialmenteLibres}</td>
                   <td>{row.utilitariosLibres}</td>
                   <td>{row.grandesLibres}</td>
