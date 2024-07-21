@@ -45,44 +45,42 @@ class Lugar {
 }
 
 class Simulation {
-constructor(stockInicial, cantidadFilasASimular) {
+  constructor(stockInicial, cantidadFilasASimular) {
+    this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular;
+    this.resultados = [];
+  }
 
-        this.CANTIDAD_DE_FILAS_A_SIMULAR = cantidadFilasASimular
-        this.resultados = []
-       // this.cantidadLlegadasClientes = 0 // Contador para la cantidad total de llegadas de clientes
-        //this.porcentajeClientesTristes = 0
-      }
   mostrarDatos(evento, datos) {
     const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
-    ).length
+    ).length;
     const utilitariosLibres = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 0
-    ).length
+    ).length;
     const utilitariosOcupados = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 2
-    ).length
+    ).length;
     const grandesLibres = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'grande' && lugar.ocupados === 0
-    ).length
+    ).length;
     const grandesOcupados = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'grande' && lugar.ocupados === 1
-    ).length
+    ).length;
     const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
-    ).length
+    ).length;
     const pequeñosOcupados = datos.lugaresDeEstacionamiento.filter(
       lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 1
-    ).length
+    ).length;
     const autos = datos.autosIngresados.map(auto => {
-      return { nro: auto.nro, estado: auto.estado }
-    })
+      return { nro: auto.nro, estado: auto.estado };
+    });
     const filaCaja = datos.filaCaja.map(auto => {
-      return { nro: auto.nro }
-    })
+      return { nro: auto.nro };
+    });
     const colaEventos = datos.colaEventos.map(evento => {
-      return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia }
-    })
+      return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia };
+    });
 
     console.log(
       `${evento.constructor.name} - t: ${evento.tiempoDeOcurrencia} \nProximos Eventos: ${JSON.stringify(
@@ -92,29 +90,33 @@ constructor(stockInicial, cantidadFilasASimular) {
       } - Fila en Caja: ${JSON.stringify(
         filaCaja
       )}\nLugares Utilitarios Parcialmente Libres: ${utilitariosParcialmenteLibres} - Lugares Utilitarios Libres: ${utilitariosLibres} - Lugares Utilitarios Ocupados: ${utilitariosOcupados} - Lugares Grandes Libres: ${grandesLibres} - Lugares Grandes Ocupados: ${grandesOcupados} - Lugares Pequeños Libres: ${pequeñosLibres} - Lugares Pequeños Ocupados: ${pequeñosOcupados}`
-    )
-    console.log()
+    );
+
+    if (evento instanceof EventoLlegadaAuto) {
+      console.log(`rndTamano: ${evento.rndTamano}, tamano: ${evento.tamano}`);
+    }
   }
+
   comenzarEjecucion() {
     const lugaresPequenos = Array.from({ length: 10 }, () => new Lugar('pequeño', 0));
     const lugaresGrandes = Array.from({ length: 6 }, () => new Lugar('grande', 0));
     const lugaresUtilitarios = Array.from({ length: 4 }, () => new Lugar('utilitario', 0));
-  
+
     const datos = {
       nroAuto: 0,
       lugaresDeEstacionamiento: [...lugaresPequenos, ...lugaresGrandes, ...lugaresUtilitarios],
       autosIngresados: [],
-      cajaOcupada: "ocupada",
+      cajaOcupada: "libre",
       filaCaja: [],
       cantAutosIngresados: 0,
       cantAutosPagaron: 0,
       acumuladorPlata: 0,
       colaEventos: []
     };
-  
+
     this.inicializarEventos(datos);
-  
-    for (let fila = 0; fila < CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
+
+    for (let fila = 0; fila < this.CANTIDAD_DE_FILAS_A_SIMULAR; fila++) {
       const utilitariosParcialmenteLibres = datos.lugaresDeEstacionamiento.filter(
         lugar => lugar.tamano === 'utilitario' && lugar.ocupados === 1
       ).length;
@@ -127,7 +129,7 @@ constructor(stockInicial, cantidadFilasASimular) {
       const pequeñosLibres = datos.lugaresDeEstacionamiento.filter(
         lugar => lugar.tamano === 'pequeño' && lugar.ocupados === 0
       ).length;
-  
+
       const autos = datos.autosIngresados.map(auto => {
         return { nro: auto.nro, estado: auto.estado, tamano: auto.tamano };
       });
@@ -135,21 +137,21 @@ constructor(stockInicial, cantidadFilasASimular) {
         return { nro: auto.nro };
       });
       const colaEventos = datos.colaEventos.map(evento => {
-        return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia, rndLlegada: evento.constructor.randomTiempo };
+        return { nombre: evento.constructor.name, tiempo: evento.tiempoDeOcurrencia };
       });
-  
+
       const eventoProximo = this.extraerEventoProximo(datos);
-  
-      if (eventoProximo.tiempoDeOcurrencia > CANTIDAD_HORAS_A_SIMULAR * 60) {
+
+      if (eventoProximo.tiempoDeOcurrencia > this.CANTIDAD_DE_FILAS_A_SIMULAR * 60) {
         break;
       }
-  
+
       eventoProximo.ocurreEvento(datos);
-  
+
       datos.tiempo = eventoProximo.tiempoDeOcurrencia;
-  
+
       this.mostrarDatos(eventoProximo, datos);
-  
+
       const filaDatos = {
         evento: eventoProximo.constructor.name,
         nroAuto: eventoProximo.nroAuto || '', // Obtenemos nroAuto si existe
@@ -166,75 +168,51 @@ constructor(stockInicial, cantidadFilasASimular) {
           tiempo: eventoProximo.tiempoDeOcurrencia,
           evento: eventoProximo.constructor.name,
         })),
-        acumuladorPlata:datos.acumuladorPlata,
-        cantAutosIngresados:datos.cantAutosIngresados,
-        cantAutosPagaron:datos.cantAutosPagaron,
+        acumuladorPlata: datos.acumuladorPlata,
+        cantAutosIngresados: datos.cantAutosIngresados,
+        cantAutosPagaron: datos.cantAutosPagaron,
       };
-  
+
+      if (eventoProximo instanceof EventoLlegadaAuto) {
+        filaDatos.rndTamano = eventoProximo.rndTamano;
+        filaDatos.tamano = eventoProximo.tamano;
+      }
+
       console.log("hasta aca fila", filaDatos);
-  
+
       if (fila >= this.FILA_A_SIMULAR_DESDE && fila < this.FILA_A_SIMULAR_DESDE + this.CANTIDAD_FILAS_A_MOSTRAR) {
         this.resultados.push({ ...filaDatos, nroFila: fila });
       }
     }
   }
-  
+
   extraerEventoProximo(datos) {
     let eventoMasCercano = datos.colaEventos[0];
-  
+
     datos.colaEventos.forEach(evento => {
       if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
         eventoMasCercano = evento;
       }
     });
-  
+
     let indice = datos.colaEventos.findIndex(
       evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
     );
-  
+
     if (indice !== -1) {
       datos.colaEventos.splice(indice, 1);
     }
-  
+
     return eventoMasCercano;
   }
-  
+
   inicializarEventos(datos) {
     datos.colaEventos.push(new EventoLlegadaAuto(0, datos.nroAuto + 1));
   }
-  
+
   getResultados() {
     return this.resultados;
   }
-  extraerEventoProximo(datos) {
-    let eventoMasCercano = datos.colaEventos[0]
-
-    datos.colaEventos.forEach(evento => {
-      if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
-        eventoMasCercano = evento
-      }
-    })
-
-    // Encontrar el índice del objeto con el tiempoDeOcurrencia específico
-    let indice = datos.colaEventos.findIndex(
-      evento => evento.tiempoDeOcurrencia === eventoMasCercano.tiempoDeOcurrencia
-    )
-
-    // Si se encuentra el objeto, eliminarlo del arreglo
-    if (indice !== -1) {
-      datos.colaEventos.splice(indice, 1)
-    }
-
-    return eventoMasCercano
-  }
-  inicializarEventos(datos) {
-    datos.colaEventos.push(new EventoLlegadaAuto(0,datos.nroAuto + 1))
-  }
-
-  getResultados() {
-    return this.resultados
-  }
- 
 }
 
 
@@ -255,47 +233,41 @@ class EventoLlegadaAuto {
     this.tiempoEntreLlegadas = 12 + this.randomTiempo * (14 - 12);
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
     this.nroAuto = nroAuto;
+    
+    // Generar y almacenar el tamaño del auto y el valor rnd correspondiente
+    this.rndTamano = Math.random();
+    this.tamano = tamanoDeAuto(this.rndTamano);
   }
 
   ocurreEvento(datos) {
     const nroAuto = datos.nroAuto + 1;
     datos.nroAuto = nroAuto; // Incrementar globalmente
 
-    const randomTamano = Math.random();
-    const tamano = tamanoDeAuto(randomTamano);
+    const autoQueLlega = new Auto(nroAuto, this.tamano); // Usar el tamaño almacenado
 
-    const autoQueLlega = new Auto(nroAuto, tamano);
-
-    if (tamano === 'grande') {
+    // Lógica de estacionamiento (sin cambios)
+    if (this.tamano === 'grande') {
       for (let i = 0; i < datos.lugaresDeEstacionamiento.length; i++) {
         const lugarEstacionamiento = datos.lugaresDeEstacionamiento[i];
-
         if (lugarEstacionamiento.tamano === 'grande' && lugarEstacionamiento.ocupados === 0) {
           lugarEstacionamiento.ocupados += 1;
           autoQueLlega.lugar = lugarEstacionamiento;
           break;
         }
       }
-    }
-
-    if (tamano == 'utilitario') {
+    } else if (this.tamano == 'utilitario') {
       for (let i = 0; i < datos.lugaresDeEstacionamiento.length; i++) {
         const lugarEstacionamiento = datos.lugaresDeEstacionamiento[i];
-
         if (lugarEstacionamiento.tamano === 'utilitario' && lugarEstacionamiento.ocupados === 0) {
           lugarEstacionamiento.ocupados += 2;
           autoQueLlega.lugar = lugarEstacionamiento;
           break;
         }
       }
-    }
-
-    if (tamano == 'pequeño') {
+    } else if (this.tamano == 'pequeño') {
       let encontroLugar = false;
-
       for (let i = 0; i < datos.lugaresDeEstacionamiento.length; i++) {
         const lugarEstacionamiento = datos.lugaresDeEstacionamiento[i];
-
         if (lugarEstacionamiento.tamano === 'pequeño' && lugarEstacionamiento.ocupados === 0) {
           lugarEstacionamiento.ocupados += 1;
           autoQueLlega.lugar = lugarEstacionamiento;
@@ -303,11 +275,9 @@ class EventoLlegadaAuto {
           break;
         }
       }
-
       if (!encontroLugar) {
         for (let i = 0; i < datos.lugaresDeEstacionamiento.length; i++) {
           const lugarEstacionamiento = datos.lugaresDeEstacionamiento[i];
-
           if (lugarEstacionamiento.tamano === 'utilitario' && lugarEstacionamiento.ocupados < 2) {
             lugarEstacionamiento.ocupados += 1;
             autoQueLlega.lugar = lugarEstacionamiento;
@@ -326,13 +296,11 @@ class EventoLlegadaAuto {
     }
 
     const existeEventoLlegadaAuto = datos.colaEventos.some(evento => evento.constructor.name === 'EventoLlegadaAuto');
-
     if (!existeEventoLlegadaAuto) {
       datos.colaEventos.push(new EventoLlegadaAuto(this.tiempoDeOcurrencia, datos.nroAuto + 1));
     }
   }
 }
-
 function calcularTiempoDeEstadia(random) {
   if (random < 0.5) {
     return 60
@@ -389,7 +357,7 @@ class EventoFinEstacionamiento {
         datos.filaCaja.push(this.auto)
       } else {
         this.auto.estado = 'pagando'
-        datos.cajaOcupada = "libre"
+        datos.cajaOcupada = "ocupada"
 
         datos.colaEventos.push(new EventoFinCobro(this.tiempoDeOcurrencia, this.auto))
       }
@@ -421,7 +389,7 @@ class EventoFinCobro {
 
       datos.colaEventos.push(new EventoFinCobro(this.tiempoDeOcurrencia, proximoAuto))
     } else {
-      datos.cajaOcupada = "ocupada"
+      datos.cajaOcupada = "libre"
     }
   }
 }
