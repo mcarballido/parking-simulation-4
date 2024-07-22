@@ -116,7 +116,7 @@ class Simulation {
       tiempoEntreLlegadas: 0,
       proximaLlegada: 0,
       rndLlegada: 0,
-      //proximaLlegada:0,
+
     };
 
     this.inicializarEventos(datos);
@@ -174,6 +174,7 @@ class Simulation {
         acumuladorPlata: datos.acumuladorPlata,
         cantAutosIngresados: datos.cantAutosIngresados,
         cantAutosPagaron: datos.cantAutosPagaron,
+        proximaLlegada:datos.proximaLlegada,
       };
 
       if (eventoProximo instanceof EventoLlegadaAuto) {
@@ -182,6 +183,12 @@ class Simulation {
         filaDatos.tiempoEntreLlegadas = eventoProximo.tiempoEntreLlegadas;
         filaDatos.rndLlegada = eventoProximo.rndLlegada;
         filaDatos.proximaLlegada = eventoProximo.tiempoDeOcurrencia;
+      }
+
+      if (eventoProximo instanceof EventoInicializacion) {
+        filaDatos.tiempoEntreLlegadas = eventoProximo.tiempoEntreLlegadas;
+        filaDatos.rndLlegada = eventoProximo.rndLlegada;
+        filaDatos.proximaLlegada = datos.proximaLlegada;
       }
 
       console.log("hasta aca fila", filaDatos);
@@ -214,7 +221,7 @@ class Simulation {
   }
 
   inicializarEventos(datos) {
-    datos.colaEventos.push(new EventoLlegadaAuto(0, datos.nroAuto + 1));
+    datos.colaEventos.push(new EventoInicializacion(0));
   }
 
   getResultados() {
@@ -232,10 +239,28 @@ function tamanoDeAuto(random) {
   }
 }
 
+class EventoInicializacion {
+  constructor(tiempoActual) {
+    //this.tiempoDeOcurrencia = tiempoActual;
+    this.rndLlegada = Math.random();
+    this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
+    this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
+  }
+
+  ocurreEvento(datos) {
+    datos.rndLlegada = this.rndLlegada;
+    datos.tiempoEntreLlegadas = this.tiempoEntreLlegadas;
+    datos.proximaLlegada = this.tiempoDeOcurrencia;
+    datos.colaEventos.push(new EventoLlegadaAuto(datos.proximaLlegada, datos.nroAuto + 1));
+  }
+
+}
+
 class EventoLlegadaAuto {
   constructor(tiempoActual, nroAuto) {
     this.rndLlegada = Math.random();
     this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
+    this.tiempoDeOcurrencia=tiempoActual;
     //this.proximaLlegada= tiempoActual + this.tiempoEntreLlegadas;
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
     this.nroAuto = nroAuto;
@@ -308,7 +333,6 @@ class EventoLlegadaAuto {
   }
 }
 
-// Suponiendo que Auto y EventoFinEstacionamiento estén definidos en otra parte del código.
 
 function calcularTiempoDeEstadia(random) {
   if (random < 0.5) {
