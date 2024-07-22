@@ -116,6 +116,7 @@ class Simulation {
       tiempoEntreLlegadas: 0,
       proximaLlegada: 0,
       rndLlegada: 0,
+      rndEstacionamiento:0,
 
     };
 
@@ -202,7 +203,7 @@ class Simulation {
 
   extraerEventoProximo(datos) {
     let eventoMasCercano = datos.colaEventos[0];
-
+    datos.colaEventos.sort((a, b) => a.tiempoDeOcurrencia - b.tiempoDeOcurrencia);
     datos.colaEventos.forEach(evento => {
       if (evento.tiempoDeOcurrencia < eventoMasCercano.tiempoDeOcurrencia) {
         eventoMasCercano = evento;
@@ -261,7 +262,7 @@ class EventoLlegadaAuto {
     this.tiempoActual = tiempoActual;
     this.rndLlegada = Math.random();
     this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
-    this.tiempoDeOcurrencia=tiempoActual;
+    //this.tiempoDeOcurrencia=tiempoActual;
     //this.proximaLlegada= tiempoActual + this.tiempoEntreLlegadas;
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
     this.nroAuto = nroAuto;
@@ -364,11 +365,13 @@ function calcularCostoEstadia(tiempoDeEstadia, tamanoDeAuto) {
 
 class EventoFinEstacionamiento {
   constructor(tiempoDeLlegada, autoEstacionado) {
+    
     this.randomTiempo = Math.random()
 
     const tiempoDeEstadia = calcularTiempoDeEstadia(this.randomTiempo)
 
     this.tiempoDeOcurrencia = tiempoDeLlegada + tiempoDeEstadia
+    this.tiempoActual = this.tiempoDeOcurrencia;
 
     autoEstacionado.costo = calcularCostoEstadia(tiempoDeEstadia, autoEstacionado.tamano)
 
