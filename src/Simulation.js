@@ -83,7 +83,7 @@ class Simulation {
     });
 
     console.log(
-      `${evento.constructor.name} - t: ${evento.tiempoDeOcurrencia} \nProximos Eventos: ${JSON.stringify(
+      `${evento.constructor.name} - t: ${evento.tiempoActual} \nProximos Eventos: ${JSON.stringify(
         colaEventos
       )} \nAutos Ingresados: ${JSON.stringify(autos)} \nCaja Ocupada: ${
         datos.cajaOcupada
@@ -241,7 +241,7 @@ function tamanoDeAuto(random) {
 
 class EventoInicializacion {
   constructor(tiempoActual) {
-    //this.tiempoDeOcurrencia = tiempoActual;
+    this.tiempoActual = tiempoActual;
     this.rndLlegada = Math.random();
     this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
     this.tiempoDeOcurrencia = tiempoActual + this.tiempoEntreLlegadas;
@@ -258,6 +258,7 @@ class EventoInicializacion {
 
 class EventoLlegadaAuto {
   constructor(tiempoActual, nroAuto) {
+    this.tiempoActual = tiempoActual;
     this.rndLlegada = Math.random();
     this.tiempoEntreLlegadas = 12 + this.rndLlegada * (14 - 12);
     this.tiempoDeOcurrencia=tiempoActual;
